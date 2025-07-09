@@ -63,9 +63,125 @@ O sistema possui:
   - O **Telegram**, para envio de mensagens de alerta ao usuário.
   - Uma **planilha Excel**, onde registra os dados e histórico de funcionamento do dispenser.
 
-### 2)
+
+## 🤖 2) Sistema Embarcado (ESP32)
+
+O firmware foi desenvolvido em **C++** com o **Arduino Framework**, executando no **ESP32**, que atua como cérebro do sistema de liberação.
+
+### ⚙️ Funcionalidades principais
+
+- Conexão segura via **Wi-Fi com HTTPS**.
+- Sincronização de horário com **servidores NTP** (UTC-3, Brasil).
+- Assinatura de tópicos **MQTT** para:
+  - Cadastro e atualização de remédios.
+  - Reabastecimento.
+  - Testes manuais.
+
+### 🧠 Lógica embarcada
+
+- A cada 10 segundos:
+  - Verifica a **hora atual**.
+  - Checa se há algum lembrete programado.
+  - Se sim, **envia sinal pela `Serial1`** para liberar o compartimento.
+  - **Publica no tópico `hora_remedio`** o nome do remédio.
+
+- Usa variáveis locais para:
+  - Nome dos remédios por compartimento.
+  - Até 3 horários por dia por remédio.
+  - Dias da semana em formato binário `"0110010"`.
+
+- Evita envio duplicado de lembrete no mesmo minuto.
+
+### 🔗 Comunicação
+
+- **MQTT**:
+  - Recebe configurações em JSON:
+
+    ```json
+    {
+      "remedio": "Dipirona",
+      "dias": ["Segunda", "Quarta"],
+      "horarios": ["10:30", "22:00"],
+      "compartimento": 2
+    }
+    ```
+
+  - Envia lembretes:
+
+    ```
+    Hora do Dipirona
+    ```
+
+- **Serial1**:
+  - Comunicação com display ou sistema mecânico (motor), exemplo de comando:
+
+    ```
+    ADD: Dipirona,2,630,1320,0101000
+    ```
+
+- **Serial (USB)**:
+  - Saída para depuração e testes
 
 ---
+
+## 📱 3) Módulo com Tela Touch e Motor (Interface Local)
+
+Este módulo é responsável por **exibir os remédios na tela**, permitir **interação local via toque** e **liberar os comprimidos** com controle de motor de passo.
+
+### 🧰 Componentes Utilizados
+
+- **ESP32** (com Serial e controle do motor)
+- **Tela LCD Touch 2.4” (MCUFRIEND)**
+- **Motor de passo 28BYJ-48** + driver ULN2003
+- **Sensor IR (presença do dedo/remédio retirado)**
+- **EEPROM interna**
+- Bibliotecas: `MCUFRIEND_kbv`, `TouchScreen`, `Stepper`, `EEPROM`, `GFButton`, `JKSButton`
+
+### 🧠 Funcionalidades
+
+- Interface gráfica com exibição de:
+  - Lista de remédios.
+  - Horários programados.
+  - Dias da semana de cada remédio (com check verde ✅).
+- Leitura de comandos da `Serial1`:
+  - `"ADD:Nome,NumHorarios,Min1,Min2,...,diasBinario"` → Cadastra e salva na EEPROM.
+  - `"RESET"` → Apaga todos os dados.
+  - `"zero"` → Define a posição inicial do motor.
+  - `"0"` a `"4"` → Seleciona e libera o remédio no tubo correspondente.
+
+- Controle do motor de passo:
+  - Gira até o compartimento correto.
+  - Executa movimento de liberação do comprimido.
+  - Realinha para posição inicial (zero).
+
+- Uso da **EEPROM**:
+  - Armazena até 5 remédios com seus dados.
+  - Dados persistem mesmo após desligar o dispositivo.
+
+- Tela Touch:
+  - Permite **navegar nos remédios cadastrados**.
+  - Exibe mensagem visual de **“Tomar agora”** após liberação.
+
+### 🧪 Exemplo de Comando Recebido via Serial
+
+```plaintext
+ADD:Dipirona,2,480,1320,1111100
+```
+
+- Nome: Dipirona
+- 2 horários: 08:00 (480 min), 22:00 (1320 min)
+- Dias: segunda a sexta (em binário)
+
+### 💾 Exibição na EEPROM
+
+```c
+struct Remedio {
+  char nome[20];
+  int horarios[3];       // até 3 horários por remédio
+  int numHorarios;
+  bool diasSemana[7];    // Dom a Sáb
+};
+```
 
 ## 🧰 Tecnologias Utilizadas
 
