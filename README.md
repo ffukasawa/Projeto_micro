@@ -38,7 +38,7 @@ O sistema possui:
 
 ## 🧠 Funcionamento dos Códigos
 
-### 1) **Interface de cadastro**
+## 1) **Interface de cadastro**
 
   O sistema foi desenvolvido em **Python**, com a interface construída usando **Tkinter** e o armazenamento de dados feito em **MongoDB**.
  
