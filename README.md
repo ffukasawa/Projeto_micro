@@ -77,7 +77,7 @@ O firmware foi desenvolvido em **C++** com o **Arduino Framework**, executando n
   - Reabastecimento.
   - Testes manuais.
 
-#### Bibliotecas utilizadas:
+### Bibliotecas utilizadas:
 
 - `WiFi.h`: conexão à rede Wi-Fi.
 - `WiFiClientSecure.h`: comunicação segura via HTTPS.
