@@ -124,7 +124,7 @@ O firmware foi desenvolvido em **C++** com o **Arduino Framework**, executando n
 
 ---
 
-## 📱 3) Módulo com Tela Touch e Motor (Interface Local)
+## 📱 3) Módulo com Tela de Controle e Motor (Interface Local)
 
 Este módulo é responsável por **exibir os remédios na tela**, permitir **interação local via toque** e **liberar os comprimidos** com controle de motor de passo.
 
@@ -185,11 +185,11 @@ struct Remedio {
 
 ## 🧰 Tecnologias Utilizadas
 
-- **Python** (lógica principal e integração)
+- **Python** (lógica da interface de cadastro e integração)
+- **C** (lógica da tela de controle, do motor e do sistema embarcado)
 - **Tkinter** (interface gráfica)
 - **MongoDB** (banco de dados)
 - **Python Telegram Bot API** (mensagens automáticas)
-- **OpenPyXL / Pandas** (geração e edição da planilha Excel)
 - **MQTT (Paho Client)** (comunicação entre módulos)
 - **Hardware/Protótipo físico** (motor para liberação dos remédios - opcional)
 
