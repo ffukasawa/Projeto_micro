@@ -38,7 +38,7 @@ O sistema possui:
 
 ## 🧠 Funcionamento dos Códigos
 
-## 1) **Interface de cadastro**
+## 💻 1) **Interface de cadastro**
 
   O sistema foi desenvolvido em **Python**, com a interface construída usando **Tkinter** e o armazenamento de dados feito em **MongoDB**.
  
@@ -76,6 +76,16 @@ O firmware foi desenvolvido em **C++** com o **Arduino Framework**, executando n
   - Cadastro e atualização de remédios.
   - Reabastecimento.
   - Testes manuais.
+
+#### Bibliotecas utilizadas:
+
+- `WiFi.h`: conexão à rede Wi-Fi.
+- `WiFiClientSecure.h`: comunicação segura via HTTPS.
+- `MQTT.h`: envio/recebimento de mensagens por MQTT.
+- `ArduinoJson.h`: leitura e manipulação de JSON.
+- `time.h`: sincronização de horário via NTP.
+- `Serial1`: comunicação com a unidade de motor e tela.
+- `EEPROM.h`: armazenamento persistente.
 
 ### 🧠 Lógica embarcada
 
@@ -135,7 +145,15 @@ Este módulo é responsável por **exibir os remédios na tela**, permitir **int
 - **Motor de passo 28BYJ-48** + driver ULN2003
 - **Sensor IR (presença do dedo/remédio retirado)**
 - **EEPROM interna**
-- Bibliotecas: `MCUFRIEND_kbv`, `TouchScreen`, `Stepper`, `EEPROM`, `GFButton`, `JKSButton`
+
+### Bibliotecas utilizadas:
+
+- `MCUFRIEND_kbv`: controle gráfico da tela LCD.
+- `TouchScreen`: leitura da tela resistiva.
+- `JKSButton`, `GFButton`: botões gráficos e de toque.
+- `Stepper`: controle do motor de passo.
+- `EEPROM`: armazenamento dos dados dos remédios.
+
 
 ### 🧠 Funcionalidades
 
@@ -185,12 +203,24 @@ struct Remedio {
 
 ## 🧰 Tecnologias Utilizadas
 
-- **Python** (lógica da interface de cadastro e integração)
-- **C** (lógica da tela de controle, do motor e do sistema embarcado)
-- **Tkinter** (interface gráfica)
-- **MongoDB** (banco de dados)
-- **Python Telegram Bot API** (mensagens automáticas)
-- **MQTT (Paho Client)** (comunicação entre módulos)
-- **Hardware/Protótipo físico** (motor para liberação dos remédios - opcional)
+### 💻 1. Software de Cadastro (Desktop)
 
+- **Python**: linguagem principal da lógica do sistema.
+- **Tkinter**: criação das interfaces gráficas (cadastro e controle).
+- **MongoDB**: banco de dados NoSQL para armazenar os remédios, horários e estoques.
+- **Paho MQTT (Python)**: comunicação entre o sistema e o dispositivo embarcado.
+- **Python Telegram Bot API**: envio de alertas automáticos via Telegram.
+
+### 🤖 2) Firmware ESP32 (Controle Remoto de Horários)
+- **Linguagem**: C++ com Arduino Framework.
+- **ESP32**: microcontrolador principal que recebe configurações, verifica horários e dispara comandos via Serial.
+
+### 📱 3. Módulo Local (Tela Touch + Motor)
+- **Linguagem**: C++
+- **Arduino Mega 2560** (ou similar)
+- **Tela LCD Touch 2.4” (MCUFRIEND)**
+- **Motor de passo 28BYJ-48** com driver **ULN2003**
+- **Sensor IR** para detectar se o remédio foi retirado
+- **EEPROM interna**
+- **Sensor fim de curso (limit switch)** *(opcional para calibrar zero)*
 
